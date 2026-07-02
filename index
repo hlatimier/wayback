@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Archive Explorer</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f2f2f2;
+    font-family:Arial,Helvetica,sans-serif;
+    color:#333;
+}
+
+header{
+
+    background:#111;
+    color:white;
+    padding:25px;
+
+    text-align:center;
+}
+
+header h1{
+
+    font-size:34px;
+    margin-bottom:10px;
+}
+
+header p{
+    color:#ccc;
+}
+
+.search{
+
+    width:90%;
+    max-width:900px;
+
+    margin:35px auto;
+
+    display:flex;
+}
+
+.search input{
+
+    flex:1;
+
+    padding:16px;
+
+    font-size:20px;
+
+    border:1px solid #888;
+}
+
+.search button{
+
+    padding:16px 30px;
+
+    border:none;
+
+    background:#1f5eff;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:18px;
+}
+
+.search button:hover{
+
+    background:#003fb9;
+
+}
+
+.timeline{
+
+    width:90%;
+    max-width:1200px;
+
+    margin:auto;
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:8px;
+
+    box-shadow:0px 0px 15px rgba(0,0,0,.15);
+}
+
+.timeline h2{
+
+    margin-bottom:20px;
+
+}
+
+.years{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    height:170px;
+
+    border-bottom:2px solid #999;
+
+}
+
+.year{
+
+    width:35px;
+
+    text-align:center;
+
+    cursor:pointer;
+}
+
+.bar{
+
+    width:100%;
+
+    background:#0078ff;
+
+    transition:.3s;
+}
+
+.bar:hover{
+
+    background:red;
+}
+
+.label{
+
+    margin-top:10px;
+}
+
+.calendar{
+
+    width:90%;
+    max-width:1200px;
+
+    margin:40px auto;
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:8px;
+
+    box-shadow:0 0 15px rgba(0,0,0,.15);
+}
+
+.month{
+
+    display:grid;
+
+    grid-template-columns:repeat(7,1fr);
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+.day{
+
+    padding:18px;
+
+    background:#ececec;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.day:hover{
+
+    background:#7cc1ff;
+}
+
+.snapshot{
+
+    width:90%;
+    max-width:1200px;
+
+    margin:40px auto;
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:8px;
+
+    box-shadow:0 0 15px rgba(0,0,0,.15);
+
+}
+
+iframe{
+
+    width:100%;
+    height:600px;
+
+    border:1px solid #999;
+}
+
+.info{
+
+    margin-bottom:20px;
+}
+
+footer{
+
+    margin-top:60px;
+
+    text-align:center;
+
+    color:#666;
+
+    padding:30px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Archive Explorer</h1>
+
+<p>Consultez différentes versions archivées d'un site.</p>
+
+</header>
+
+<div class="search">
+
+<input
+id="url"
+placeholder="https://monsite.fr">
+
+<button onclick="searchArchive()">
+
+Explorer
+
+</button>
+
+</div>
+
+<div class="timeline">
+
+<h2>Historique</h2>
+
+<div class="years" id="years">
+
+</div>
+
+</div>
+
+<div class="calendar">
+
+<h2>Dates disponibles</h2>
+
+<div class="month" id="calendar">
+
+</div>
+
+</div>
+
+<div class="snapshot">
+
+<div class="info">
+
+<strong id="selectedDate">
+
+Aucune archive sélectionnée
+
+</strong>
+
+</div>
+
+<iframe
+id="frame"
+src="about:blank">
+
+</iframe>
+
+</div>
+
+<footer>
+
+Prototype inspiré d'une interface d'archives du Web.
+
+</footer>
+
+<script>
+
+const years=document.getElementById("years");
+
+for(let y=2000;y<=2025;y++){
+
+let div=document.createElement("div");
+
+div.className="year";
+
+let height=Math.random()*120+20;
+
+div.innerHTML=`
+
+<div class="bar"
+
+style="height:${height}px">
+
+</div>
+
+<div class="label">
+
+${y}
+
+</div>
+
+`;
+
+div.onclick=()=>{
+
+generateCalendar(y);
+
+}
+
+years.appendChild(div);
+
+}
+
+function generateCalendar(year){
+
+const calendar=document.getElementById("calendar");
+
+calendar.innerHTML="";
+
+for(let i=1;i<=31;i++){
+
+let d=document.createElement("div");
+
+d.className="day";
+
+d.innerHTML=i;
+
+d.onclick=()=>{
+
+document.getElementById("selectedDate").innerHTML=
+
+"Archive du "+i+"/07/"+year;
+
+};
+
+calendar.appendChild(d);
+
+}
+
+}
+
+generateCalendar(2025);
+
+function searchArchive(){
+
+let url=document.getElementById("url").value;
+
+if(url===""){
+
+alert("Entrez une URL");
+
+return;
+
+}
+
+if(!url.startsWith("http")){
+
+url="https://"+url;
+
+}
+
+document.getElementById("frame").src=url;
+
+}
+
+</script>
+
+</body>
+</html>
